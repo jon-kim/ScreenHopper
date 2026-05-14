@@ -7,6 +7,30 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
+
+    <Version>1.0.0</Version>
+    <InformationalVersion>1.0.0</InformationalVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+  </PropertyGroup>
+
+  <Target Name="ApplyTimestampVersion" BeforeTargets="GenerateAssemblyInfo" Condition="'$(BuildingInsideVisualStudio)' != 'true'">
+    <PropertyGroup>
+      <VersionYear>$([System.DateTime]::Now.ToString('yyyy'))</VersionYear>
+      <VersionDayOfYear>$([System.DateTime]::Now.DayOfYear.ToString('000'))</VersionDayOfYear>
+      <VersionTime>$([System.DateTime]::Now.ToString('HHmmssfff'))</VersionTime>
+
+      <Version>1.$(VersionYear).$(VersionDayOfYear).$(VersionTime)</Version>
+      <InformationalVersion>$(Version)</InformationalVersion>
+      <AssemblyVersion>1.$(VersionYear).$(VersionDayOfYear).$([System.DateTime]::Now.ToString('HHmm'))</AssemblyVersion>
+      <FileVersion>$(AssemblyVersion)</FileVersion>
+    </PropertyGroup>
+  </Target>
 
 </Project>
