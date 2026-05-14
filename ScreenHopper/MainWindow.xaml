@@ -3,10 +3,252 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:models="clr-namespace:ScreenHopper.Models"
+        xmlns:converters="clr-namespace:ScreenHopper.Converters"
         xmlns:local="clr-namespace:ScreenHopper"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="ScreenHop"
+        Height="760"
+        Width="780"
+        MinHeight="680"
+        MinWidth="700"
+        Background="#F4F6FB">
+    <Window.Resources>
+        <converters:ZoneSelectedConverter x:Key="ZoneSelectedConverter" />
 
+        <SolidColorBrush x:Key="PanelBrush" Color="#FFFFFF" />
+        <SolidColorBrush x:Key="PanelBorderBrush" Color="#D9E0F0" />
+        <SolidColorBrush x:Key="AccentBrush" Color="#4F66DA" />
+        <SolidColorBrush x:Key="AccentDarkBrush" Color="#3E54C3" />
+
+        <Style TargetType="TextBlock" x:Key="HeaderTextStyle">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#2E3A59" />
+            <Setter Property="Margin" Value="0,0,0,6" />
+        </Style>
+
+        <Style TargetType="ComboBox" x:Key="InputComboStyle">
+            <Setter Property="MinHeight" Value="32" />
+            <Setter Property="Padding" Value="8,4" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="BorderBrush" Value="{StaticResource PanelBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Background" Value="White" />
+        </Style>
+
+        <Style TargetType="Button" x:Key="RefreshButtonStyle">
+            <Setter Property="MinHeight" Value="32" />
+            <Setter Property="MinWidth" Value="100" />
+            <Setter Property="Padding" Value="10,4" />
+            <Setter Property="Background" Value="#EAF0FF" />
+            <Setter Property="BorderBrush" Value="#C7D3F4" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Foreground" Value="#30406E" />
+        </Style>
+
+        <Style TargetType="GroupBox">
+            <Setter Property="Margin" Value="0,0,0,12" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="BorderBrush" Value="{StaticResource PanelBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Background" Value="{StaticResource PanelBrush}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#2E3A59" />
+        </Style>
+
+        <Style TargetType="CheckBox" x:Key="ModifierCheckStyle">
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+            <Setter Property="Foreground" Value="#34456E" />
+        </Style>
+
+        <Style TargetType="ToggleButton" x:Key="ZoneToggleStyle">
+            <Setter Property="Margin" Value="0,0,0,8" />
+            <Setter Property="Padding" Value="8,6" />
+            <Setter Property="Background" Value="#F8FAFF" />
+            <Setter Property="BorderBrush" Value="#CFD8EF" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Foreground" Value="#36456F" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Style.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Background" Value="#DCE6FF" />
+                    <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}" />
+                    <Setter Property="Foreground" Value="#25345C" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="Button" x:Key="MoveButtonStyle">
+            <Setter Property="Height" Value="42" />
+            <Setter Property="Padding" Value="14,6" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource AccentDarkBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource PanelBorderBrush}" BorderThickness="1" Padding="12" Margin="0,0,0,12">
+            <StackPanel>
+                <TextBlock Text="Target Application" Style="{StaticResource HeaderTextStyle}" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox Grid.Column="0"
+                              Style="{StaticResource InputComboStyle}"
+                              Margin="0,0,8,0"
+                              ItemsSource="{Binding Applications}"
+                              SelectedItem="{Binding SelectedApplication, Mode=TwoWay}"
+                              DisplayMemberPath="DisplayText">
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="ComboBoxItem">
+                                <Setter Property="VerticalContentAlignment" Value="Center" />
+                                <Setter Property="ContextMenu">
+                                    <Setter.Value>
+                                        <ContextMenu>
+                                            <MenuItem Header="Hide from list"
+                                                      Command="{Binding DataContext.HideFromListCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                      CommandParameter="{Binding}" />
+                                        </ContextMenu>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
+                    </ComboBox>
+
+                    <Button Grid.Column="1" Style="{StaticResource RefreshButtonStyle}" Content="Refresh" Command="{Binding RefreshAppsCommand}" />
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="1" Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource PanelBorderBrush}" BorderThickness="1" Padding="12" Margin="0,0,0,12">
+            <StackPanel>
+                <TextBlock Text="Destination Monitor" Style="{StaticResource HeaderTextStyle}" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox Grid.Column="0"
+                              Style="{StaticResource InputComboStyle}"
+                              Margin="0,0,8,0"
+                              ItemsSource="{Binding Monitors}"
+                              SelectedItem="{Binding SelectedMonitor, Mode=TwoWay}"
+                              DisplayMemberPath="DisplayName" />
+
+                    <Button Grid.Column="1" Style="{StaticResource RefreshButtonStyle}" Content="Refresh" Command="{Binding RefreshMonitorsCommand}" />
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <GroupBox Grid.Row="0" Header="Window Modifiers">
+                <StackPanel>
+                    <CheckBox Style="{StaticResource ModifierCheckStyle}"
+                              Content="Double-click center before moving"
+                              IsChecked="{Binding RequiresDoubleClick, Mode=TwoWay}" />
+                    <CheckBox Style="{StaticResource ModifierCheckStyle}"
+                              Content="Always on Top"
+                              IsChecked="{Binding AlwaysOnTop, Mode=TwoWay}" />
+
+                    <Grid Margin="0,2,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Opacity" VerticalAlignment="Center" Foreground="#34456E" />
+                        <TextBlock Grid.Column="1" Text="{Binding OpacityLevel, StringFormat={}{0}%}" VerticalAlignment="Center" Foreground="{StaticResource AccentBrush}" FontWeight="SemiBold" />
+                    </Grid>
+
+                    <Slider Margin="0,6,0,0"
+                            Minimum="0"
+                            Maximum="100"
+                            TickFrequency="5"
+                            IsSnapToTickEnabled="True"
+                            Value="{Binding OpacityLevel, Mode=TwoWay}" />
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Grid.Row="1" Header="Zone Snapping">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="8" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <ToggleButton Grid.Row="0" Grid.Column="0" Style="{StaticResource ZoneToggleStyle}"
+                                  Content="Top-Left"
+                                  IsChecked="{Binding SelectedZone, Mode=TwoWay, Converter={StaticResource ZoneSelectedConverter}, ConverterParameter={x:Static models:ZoneSnap.TopLeft}}"
+                                  Command="{Binding SelectZoneCommand}"
+                                  CommandParameter="{x:Static models:ZoneSnap.TopLeft}" />
+                    <ToggleButton Grid.Row="0" Grid.Column="2" Style="{StaticResource ZoneToggleStyle}"
+                                  Content="Top-Right"
+                                  IsChecked="{Binding SelectedZone, Mode=TwoWay, Converter={StaticResource ZoneSelectedConverter}, ConverterParameter={x:Static models:ZoneSnap.TopRight}}"
+                                  Command="{Binding SelectZoneCommand}"
+                                  CommandParameter="{x:Static models:ZoneSnap.TopRight}" />
+
+                    <ToggleButton Grid.Row="1" Grid.Column="0" Style="{StaticResource ZoneToggleStyle}"
+                                  Content="Bottom-Left"
+                                  IsChecked="{Binding SelectedZone, Mode=TwoWay, Converter={StaticResource ZoneSelectedConverter}, ConverterParameter={x:Static models:ZoneSnap.BottomLeft}}"
+                                  Command="{Binding SelectZoneCommand}"
+                                  CommandParameter="{x:Static models:ZoneSnap.BottomLeft}" />
+                    <ToggleButton Grid.Row="1" Grid.Column="2" Style="{StaticResource ZoneToggleStyle}"
+                                  Content="Bottom-Right"
+                                  IsChecked="{Binding SelectedZone, Mode=TwoWay, Converter={StaticResource ZoneSelectedConverter}, ConverterParameter={x:Static models:ZoneSnap.BottomRight}}"
+                                  Command="{Binding SelectZoneCommand}"
+                                  CommandParameter="{x:Static models:ZoneSnap.BottomRight}" />
+
+                    <ToggleButton Grid.Row="2" Grid.Column="0" Style="{StaticResource ZoneToggleStyle}"
+                                  Content="Left Half"
+                                  IsChecked="{Binding SelectedZone, Mode=TwoWay, Converter={StaticResource ZoneSelectedConverter}, ConverterParameter={x:Static models:ZoneSnap.LeftHalf}}"
+                                  Command="{Binding SelectZoneCommand}"
+                                  CommandParameter="{x:Static models:ZoneSnap.LeftHalf}" />
+                    <ToggleButton Grid.Row="2" Grid.Column="2" Style="{StaticResource ZoneToggleStyle}"
+                                  Content="Right Half"
+                                  IsChecked="{Binding SelectedZone, Mode=TwoWay, Converter={StaticResource ZoneSelectedConverter}, ConverterParameter={x:Static models:ZoneSnap.RightHalf}}"
+                                  Command="{Binding SelectZoneCommand}"
+                                  CommandParameter="{x:Static models:ZoneSnap.RightHalf}" />
+
+                    <ToggleButton Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource ZoneToggleStyle}"
+                                  Margin="0"
+                                  Content="Full Screen / Center"
+                                  IsChecked="{Binding SelectedZone, Mode=TwoWay, Converter={StaticResource ZoneSelectedConverter}, ConverterParameter={x:Static models:ZoneSnap.FullCenter}}"
+                                  Command="{Binding SelectZoneCommand}"
+                                  CommandParameter="{x:Static models:ZoneSnap.FullCenter}" />
+                </Grid>
+            </GroupBox>
+        </Grid>
+
+        <Button Grid.Row="3"
+                Margin="0,12,0,0"
+                Style="{StaticResource MoveButtonStyle}"
+                Content="Move Window"
+                Command="{Binding MoveCommand}" />
     </Grid>
 </Window>
