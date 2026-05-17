@@ -360,4 +360,7 @@ MigrationBackup/
 .ionide/
 
 # Fody - auto-generated XML schema
+
+# ScreenHopper release scripts
+scripts/
 FodyWeavers.xsd
