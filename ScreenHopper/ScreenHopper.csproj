@@ -20,6 +20,10 @@
     <PublishSingleFile>true</PublishSingleFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Velopack" Version="0.0.1298" />
+  </ItemGroup>
+
   <Target Name="ApplyTimestampVersion" BeforeTargets="GenerateAssemblyInfo" Condition="'$(BuildingInsideVisualStudio)' != 'true'">
     <PropertyGroup>
       <VersionYear>$([System.DateTime]::Now.ToString('yyyy'))</VersionYear>

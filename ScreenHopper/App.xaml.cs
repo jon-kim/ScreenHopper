@@ -1,13 +1,19 @@
 ﻿using System.Windows;
 using ScreenHopper.Models;
 using ScreenHopper.ViewModels;
+using Velopack;
+using Velopack.Sources;
 
 namespace ScreenHopper;
 
 public partial class App : System.Windows.Application
 {
-    protected override void OnStartup(StartupEventArgs e)
+    private const string GitHubRepo = "https://github.com/jon-kim/ScreenHopper";
+
+    protected override async void OnStartup(StartupEventArgs e)
     {
+        VelopackApp.Build().Run();
+
         base.OnStartup(e);
 
         if (TryParseCliArguments(e.Args, out var processName, out var monitorIndex, out var zone))
@@ -21,6 +27,46 @@ public partial class App : System.Windows.Application
         var mainWindow = new MainWindow();
         MainWindow = mainWindow;
         mainWindow.Show();
+
+        await CheckForUpdatesAsync();
+    }
+
+    private static async Task CheckForUpdatesAsync()
+    {
+        try
+        {
+            var source = new GithubSource(GitHubRepo, null, false);
+            var manager = new UpdateManager(source);
+
+            if (!manager.IsInstalled)
+            {
+                return;
+            }
+
+            var updateInfo = await manager.CheckForUpdatesAsync();
+            if (updateInfo is null)
+            {
+                return;
+            }
+
+            var result = System.Windows.MessageBox.Show(
+                $"A new version of ScreenHopper is available ({updateInfo.TargetFullRelease.Version}).\n\nWould you like to update and restart now?",
+                "Update Available",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Information);
+
+            if (result != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            await manager.DownloadUpdatesAsync(updateInfo);
+            manager.ApplyUpdatesAndRestart(updateInfo);
+        }
+        catch
+        {
+            // Silently ignore update check failures so the app always starts.
+        }
     }
 
     private static bool TryParseCliArguments(string[] args, out string processName, out int monitorIndex, out ZoneSnap zone)
