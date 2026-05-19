@@ -10,13 +10,33 @@ public partial class AboutWindow : Window
     {
         InitializeComponent();
 
-        var version = Assembly.GetExecutingAssembly()
-                              .GetName()
-                              .Version;
+        var assembly = Assembly.GetExecutingAssembly();
 
-        VersionText.Text = version is not null
-            ? $"Version {version.Major}.{version.Minor}.{version.Build}"
-            : "Version unknown";
+        var informationalVersion = assembly
+            .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+            .InformationalVersion;
+
+        var fileVersion = FileVersionInfo
+            .GetVersionInfo(assembly.Location)
+            .ProductVersion;
+
+        var assemblyVersion = assembly.GetName().Version?.ToString();
+
+        var displayVersion = informationalVersion;
+
+        if (string.IsNullOrWhiteSpace(displayVersion))
+        {
+            displayVersion = fileVersion;
+        }
+
+        if (string.IsNullOrWhiteSpace(displayVersion))
+        {
+            displayVersion = assemblyVersion;
+        }
+
+        VersionText.Text = string.IsNullOrWhiteSpace(displayVersion)
+            ? "Version unknown"
+            : $"Version {displayVersion}";
     }
 
     private void GitHubLink_Click(object sender, RoutedEventArgs e)
