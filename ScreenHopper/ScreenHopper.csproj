@@ -9,10 +9,10 @@
     <StartupObject>ScreenHopper.Program</StartupObject>
     <UseWindowsForms>true</UseWindowsForms>
 
-    <Version>0.26139.946</Version>
-    <InformationalVersion>0.26139.946</InformationalVersion>
-    <AssemblyVersion>0.26139.946</AssemblyVersion>
-    <FileVersion>0.26139.946</FileVersion>
+    <Version>0.26.139.946</Version>
+    <InformationalVersion>0.26.139.946</InformationalVersion>
+    <AssemblyVersion>0.26.139.946</AssemblyVersion>
+    <FileVersion>0.26.139.946</FileVersion>
     <ApplicationIcon>ScreenHopper.ico</ApplicationIcon>
     <PackageIcon>ScreenHopper.png</PackageIcon>
   </PropertyGroup>
@@ -42,10 +42,9 @@
     <PropertyGroup>
       <VersionYearTwoDigits>$([System.DateTime]::Now.ToString('yy'))</VersionYearTwoDigits>
       <VersionDayOfYear>$([System.DateTime]::Now.DayOfYear.ToString('000'))</VersionDayOfYear>
-      <VersionYearDay>$(VersionYearTwoDigits)$(VersionDayOfYear)</VersionYearDay>
       <VersionMinutesSinceMidnight>$([MSBuild]::Add($([MSBuild]::Multiply($([System.DateTime]::Now.Hour), 60)), $([System.DateTime]::Now.Minute)))</VersionMinutesSinceMidnight>
 
-      <Version>0.$(VersionYearDay).$(VersionMinutesSinceMidnight)</Version>
+      <Version>0.$(VersionYearTwoDigits).$(VersionDayOfYear).$(VersionMinutesSinceMidnight)</Version>
       <InformationalVersion>$(Version)</InformationalVersion>
       <AssemblyVersion>$(Version)</AssemblyVersion>
       <FileVersion>$(Version)</FileVersion>
