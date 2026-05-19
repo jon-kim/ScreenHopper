@@ -9,10 +9,12 @@
     <StartupObject>ScreenHopper.Program</StartupObject>
     <UseWindowsForms>true</UseWindowsForms>
 
-    <Version>1.0.0</Version>
-    <InformationalVersion>1.0.0</InformationalVersion>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
+    <Version>0.2000.001.000000</Version>
+    <InformationalVersion>0.2000.001.000000</InformationalVersion>
+    <AssemblyVersion>0.2000.001.000000</AssemblyVersion>
+    <FileVersion>0.2000.001.000000</FileVersion>
+    <ApplicationIcon>ScreenHopper.ico</ApplicationIcon>
+    <PackageIcon>ScreenHopper.png</PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
@@ -22,19 +24,30 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="ScreenHopper.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\..\Downloads\ScreenHopper.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Velopack" Version="0.0.1298" />
   </ItemGroup>
 
-  <Target Name="ApplyTimestampVersion" BeforeTargets="GenerateAssemblyInfo" Condition="'$(BuildingInsideVisualStudio)' != 'true'">
+  <Target Name="ApplyTimestampVersion" BeforeTargets="GenerateAssemblyInfo" Condition="'$(DesignTimeBuild)' != 'true' and '$(UseTimestampVersion)' != 'false'">
     <PropertyGroup>
       <VersionYear>$([System.DateTime]::Now.ToString('yyyy'))</VersionYear>
       <VersionDayOfYear>$([System.DateTime]::Now.DayOfYear.ToString('000'))</VersionDayOfYear>
-      <VersionTime>$([System.DateTime]::Now.ToString('HHmmssfff'))</VersionTime>
+      <VersionTime>$([System.DateTime]::Now.ToString('HHmmss'))</VersionTime>
 
-      <Version>1.$(VersionYear).$(VersionDayOfYear).$(VersionTime)</Version>
+      <Version>0.$(VersionYear).$(VersionDayOfYear).$(VersionTime)</Version>
       <InformationalVersion>$(Version)</InformationalVersion>
-      <AssemblyVersion>1.$(VersionYear).$(VersionDayOfYear).$([System.DateTime]::Now.ToString('HHmm'))</AssemblyVersion>
-      <FileVersion>$(AssemblyVersion)</FileVersion>
+      <AssemblyVersion>$(Version)</AssemblyVersion>
+      <FileVersion>$(Version)</FileVersion>
     </PropertyGroup>
   </Target>
 
