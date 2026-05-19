@@ -9,10 +9,10 @@
     <StartupObject>ScreenHopper.Program</StartupObject>
     <UseWindowsForms>true</UseWindowsForms>
 
-    <Version>0.2000.001.000000</Version>
-    <InformationalVersion>0.2000.001.000000</InformationalVersion>
-    <AssemblyVersion>0.2000.001.000000</AssemblyVersion>
-    <FileVersion>0.2000.001.000000</FileVersion>
+    <Version>0.26139.946</Version>
+    <InformationalVersion>0.26139.946</InformationalVersion>
+    <AssemblyVersion>0.26139.946</AssemblyVersion>
+    <FileVersion>0.26139.946</FileVersion>
     <ApplicationIcon>ScreenHopper.ico</ApplicationIcon>
     <PackageIcon>ScreenHopper.png</PackageIcon>
   </PropertyGroup>
@@ -40,11 +40,12 @@
 
   <Target Name="ApplyTimestampVersion" BeforeTargets="GenerateAssemblyInfo" Condition="'$(DesignTimeBuild)' != 'true' and '$(UseTimestampVersion)' != 'false'">
     <PropertyGroup>
-      <VersionYear>$([System.DateTime]::Now.ToString('yyyy'))</VersionYear>
+      <VersionYearTwoDigits>$([System.DateTime]::Now.ToString('yy'))</VersionYearTwoDigits>
       <VersionDayOfYear>$([System.DateTime]::Now.DayOfYear.ToString('000'))</VersionDayOfYear>
-      <VersionTime>$([System.DateTime]::Now.ToString('HHmmss'))</VersionTime>
+      <VersionYearDay>$(VersionYearTwoDigits)$(VersionDayOfYear)</VersionYearDay>
+      <VersionMinutesSinceMidnight>$([MSBuild]::Add($([MSBuild]::Multiply($([System.DateTime]::Now.Hour), 60)), $([System.DateTime]::Now.Minute)))</VersionMinutesSinceMidnight>
 
-      <Version>0.$(VersionYear).$(VersionDayOfYear).$(VersionTime)</Version>
+      <Version>0.$(VersionYearDay).$(VersionMinutesSinceMidnight)</Version>
       <InformationalVersion>$(Version)</InformationalVersion>
       <AssemblyVersion>$(Version)</AssemblyVersion>
       <FileVersion>$(Version)</FileVersion>
