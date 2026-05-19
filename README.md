@@ -177,6 +177,14 @@ dotnet run --project ScreenHopper/ScreenHopper.csproj -- --move "notepad" --moni
 
 ---
 
+## License
+
+This project is licensed under the **GNU General Public License v3.0 (GPLv3)**.
+
+See the [LICENSE](LICENSE) file for the full text.
+
+---
+
 ## Project Name
 
 **ScreenHopper**: because your windows shouldn’t crawl—they should hop.

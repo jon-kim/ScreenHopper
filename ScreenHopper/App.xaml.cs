@@ -12,8 +12,6 @@ public partial class App : System.Windows.Application
 
     protected override async void OnStartup(StartupEventArgs e)
     {
-        VelopackApp.Build().Run();
-
         base.OnStartup(e);
 
         if (TryParseCliArguments(e.Args, out var processName, out var monitorIndex, out var zone))

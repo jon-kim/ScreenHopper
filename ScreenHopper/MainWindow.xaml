@@ -88,6 +88,18 @@
             <Setter Property="BorderBrush" Value="{StaticResource AccentDarkBrush}" />
             <Setter Property="BorderThickness" Value="1" />
         </Style>
+
+        <Style TargetType="Button" x:Key="AboutButtonStyle">
+            <Setter Property="Background"   Value="Transparent" />
+            <Setter Property="BorderBrush"  Value="#D9E0F0" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Foreground"   Value="#6B7A99" />
+            <Setter Property="FontSize"     Value="11" />
+            <Setter Property="Padding"      Value="10,4" />
+            <Setter Property="Cursor"       Value="Hand" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
     </Window.Resources>
 
     <Grid Margin="16">
@@ -98,7 +110,13 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource PanelBorderBrush}" BorderThickness="1" Padding="12" Margin="0,0,0,12">
+        <!-- About button pinned to top-right -->
+        <Button Grid.Row="0"
+                Style="{StaticResource AboutButtonStyle}"
+                Content="About"
+                Margin="0,0,0,8"
+                Panel.ZIndex="10"
+                Click="AboutButton_Click" />        <Border Grid.Row="0" Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource PanelBorderBrush}" BorderThickness="1" Padding="12" Margin="0,0,0,12">
             <StackPanel>
                 <TextBlock Text="Target Application" Style="{StaticResource HeaderTextStyle}" />
                 <Grid>
